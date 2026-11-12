@@ -1,0 +1,23 @@
+[project]
+name = "m06-support-bot"
+version = "0.1.0"
+description = "Module 06 lab: a grounded, injection-resistant support chatbot with an evaluation harness and a RAFT dataset builder."
+requires-python = ">=3.12,<3.13"
+dependencies = []
+
+[project.scripts]
+lab = "m06_support_bot.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8.3"]
+
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/m06_support_bot"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

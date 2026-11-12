@@ -1,0 +1,23 @@
+[project]
+name = "m03-playground"
+version = "0.1.0"
+description = "Module 03 lab: an offline LLM playground with metrics, retries, budgets, redaction and traces."
+requires-python = ">=3.12,<3.13"
+dependencies = []
+
+[project.scripts]
+lab = "m03_playground.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8.3"]
+
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/m03_playground"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

@@ -1,0 +1,23 @@
+[project]
+name = "m07-agents-tools"
+version = "0.1.0"
+description = "Module 07 lab: workflow patterns, a validated toolbox and a teaching MCP server over Hearthwise data."
+requires-python = ">=3.12,<3.13"
+dependencies = []
+
+[project.scripts]
+lab = "m07_agents_tools.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8.3"]
+
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/m07_agents_tools"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
