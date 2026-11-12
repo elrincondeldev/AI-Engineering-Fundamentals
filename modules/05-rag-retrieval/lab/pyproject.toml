@@ -1,0 +1,30 @@
+[project]
+name = "m05-retrieval"
+version = "0.1.0"
+description = "Lab 05: parse, chunk, index and search the Hearthwise help centre; measure retrieval and ANN trade-offs."
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "numpy>=1.26",
+    "faiss-cpu>=1.10,<1.11",  # 1.10 ships wheels for macOS 11+ and manylinux; newer releases need macOS 14-15+
+]
+
+[project.scripts]
+lab = "m05_retrieval.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8.3"]
+
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/m05_retrieval"]
+
+[tool.pytest.ini_options]
+filterwarnings = [  # harmless deprecation warnings raised inside faiss 1.10's SWIG bindings
+    "ignore:numpy.core._multiarray_umath is deprecated:DeprecationWarning",
+    "ignore:builtin type .* has no __module__ attribute:DeprecationWarning",
+]
+testpaths = ["tests"]
+addopts = "-q"

@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  discover:
+    name: Find labs
+    runs-on: ubuntu-latest
+    outputs:
+      labs: ${{ steps.find.outputs.labs }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: find
+        run: |
+          labs=$(ls -d modules/*/lab tools/lab_skeleton | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          echo "labs=$labs" >> "$GITHUB_OUTPUT"
+          echo "Labs: $labs"
+
+  lab-tests:
+    name: Tests · ${{ matrix.lab }}
+    needs: discover
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        lab: ${{ fromJson(needs.discover.outputs.labs) }}
+    defaults:
+      run:
+        working-directory: ${{ matrix.lab }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.8.0"
+      - name: Install (Python 3.12 from .python-version, locked dependencies)
+        run: uv sync --locked
+      - name: Run tests (offline, fake provider)
+        run: uv run pytest
+        env:
+          LLM_PROVIDER: fake
+
+  content:
+    name: Datasets, links, translations, templates, diagrams
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Datasets are reproducible
+        run: python datasets/generate.py --check
+      - name: Internal links and anchors
+        run: python tools/check_links.py
+      - name: English and Spanish pages are in sync
+        run: python tools/check_i18n.py
+      - name: Navigation chain is unbroken (both languages)
+        run: python tools/check_navigation.py
+      - name: Lessons follow the templates (English)
+        run: python tools/check_lessons.py
+      - name: Lessons follow the templates (Spanish)
+        run: python tools/check_lessons.py --lang es
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Mermaid diagrams parse
+        run: |
+          npm ci --prefix tools
+          node tools/check_mermaid.mjs

@@ -1,0 +1,10 @@
+{
+  "name": "course-tools",
+  "private": true,
+  "description": "Node dependencies for tools/check_mermaid.mjs (install with: npm ci --prefix tools)",
+  "type": "module",
+  "dependencies": {
+    "jsdom": "25.0.1",
+    "mermaid": "11.17.2"
+  }
+}

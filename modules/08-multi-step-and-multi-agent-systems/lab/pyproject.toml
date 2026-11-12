@@ -1,0 +1,23 @@
+[project]
+name = "m08-web-agent"
+version = "0.1.0"
+description = "Module 08 lab: an Ask-the-Web agent (ReAct, ReWOO, Reflexion, tree search, multi-agent) over an offline web snapshot."
+requires-python = ">=3.12,<3.13"
+dependencies = []
+
+[project.scripts]
+lab = "m08_web_agent.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8.3"]
+
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/m08_web_agent"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

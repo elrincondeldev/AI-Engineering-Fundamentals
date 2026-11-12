@@ -1,0 +1,23 @@
+[project]
+name = "m10-deep-research"
+version = "0.1.0"
+description = "Module 10 lab: a deep-research agent over an offline web snapshot, plus local-deployment calculators."
+requires-python = ">=3.12,<3.13"
+dependencies = ["numpy>=1.26"]
+
+[project.scripts]
+lab = "m10_deep_research.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8.3"]
+
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/m10_deep_research"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
